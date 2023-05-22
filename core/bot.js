@@ -20,12 +20,18 @@ client.on('messageCreate', async message => {
     const command = args.shift().toLowerCase();
 
     if (command == 'ping') {
-        message.channel.send('Pong!');
+        await message.channel.send('Pong!');
+    } else if (command == 'chat') {
+        const [response] = await client.chat.sendAndAwaitResponse(args.join(' '));
+        await message.channel.send(response.text);
     }
 });
 
 client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    console.log(`Discord bot is ready`);
 });
 
-client.login(token);
+module.exports = chat => {
+    client.chat = chat;
+    client.login(token);
+};
