@@ -10,21 +10,30 @@ const client = new Discord.Client({
         Discord.GatewayIntentBits.DirectMessages,
         Discord.GatewayIntentBits.MessageContent,
     ],
+    partials: [
+        Discord.Partials.Channel,
+        Discord.Partials.Message,
+        //
+    ],
 });
 
 client.on('messageCreate', async message => {
     if (message.author.bot) return;
-    if (!message.content.startsWith(prefix)) return;
+    if (message.content.startsWith(prefix)) {
+        const args = message.content.slice(prefix.length).trim().split(/ +/);
+        const command = args.shift().toLowerCase();
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
+        if (command == 'ping') {
+            await message.channel.send('Pong!');
+        }
 
-    if (command == 'ping') {
-        await message.channel.send('Pong!');
-    } else if (command == 'chat') {
-        const [response] = await client.chat.sendAndAwaitResponse(args.join(' '));
-        await message.channel.send(response.text);
+        return;
     }
+
+    if (message.guild) return;
+
+    const [reply] = await client.chat.sendAndAwaitResponse(message.content);
+    await message.channel.send(reply.text);
 });
 
 client.once('ready', () => {
