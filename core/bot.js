@@ -9,7 +9,6 @@ const client = new Discord.Client({
     intents: [
         Discord.GatewayIntentBits.Guilds,
         Discord.GatewayIntentBits.GuildMessages,
-        Discord.GatewayIntentBits.DirectMessages,
         Discord.GatewayIntentBits.MessageContent,
     ],
     partials: [
@@ -21,6 +20,8 @@ const client = new Discord.Client({
 
 client.on('messageCreate', async message => {
     if (message.author.bot) return;
+    const { id, username } = message.author;
+
     if (message.content.startsWith(prefix)) {
         const args = message.content.slice(prefix.length).trim().split(/ +/);
         const command = args.shift().toLowerCase();
@@ -28,7 +29,7 @@ client.on('messageCreate', async message => {
         if (command == 'ping') {
             await message.channel.send('[System] Pong!');
         } else if (command == 'chat') {
-            const { id, username } = message.author;
+            if (message.channel.type == 11) return;
 
             const chat = await Chat.findOne({ userId: id });
             if (chat) {
@@ -46,7 +47,14 @@ client.on('messageCreate', async message => {
         return;
     }
 
-    // if (message.guild) return;
+    if (message.channel.type != 11) return;
+
+    const chat = await Chat.findOne({ userId: id });
+    if (chat?.userId != id) {
+        return await message.channel.send('[System] Who are you?');
+    }
+
+    await message.channel.send('Hi!');
 
     // const [reply] = await client.chat.sendAndAwaitResponse(message.content);
     // await message.channel.send(reply.text);
