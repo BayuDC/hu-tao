@@ -12,4 +12,10 @@ module.exports = async () => {
     console.log(`Character AI is ready`);
 
     return chat;
+    return {
+        fetchChat(characterId, conversationId) {},
+        createChat() {},
+    };
+
+    new Webscoket();
 };

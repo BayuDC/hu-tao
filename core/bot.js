@@ -33,6 +33,7 @@ client.on('messageCreate', async message => {
 
             const chat = await Chat.findOne({ userId: id });
             if (chat) {
+                // TODO get threads from collection
                 const thread = await message.channel.threads.fetch(chat.threadId);
                 await thread.send(`[System] <@${id}>`);
 
@@ -42,6 +43,7 @@ client.on('messageCreate', async message => {
             const thread = await message.startThread({ name: `${username}'s Room` });
             await Chat.create({ userId: id, threadId: thread.id });
             await thread.send('[System] Thread created!');
+            // TODO create chat in character.ai
         }
 
         return;
@@ -55,6 +57,7 @@ client.on('messageCreate', async message => {
     }
 
     await message.channel.send('Hi!');
+    // TODO interact with character.ai
 
     // const [reply] = await client.chat.sendAndAwaitResponse(message.content);
     // await message.channel.send(reply.text);
@@ -62,6 +65,8 @@ client.on('messageCreate', async message => {
 
 client.once('ready', () => {
     console.log(`Discord bot is ready`);
+
+    // TODO eager loading threads collection
 });
 
 module.exports = chat => {
