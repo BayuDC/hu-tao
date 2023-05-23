@@ -41,7 +41,7 @@ client.on('messageCreate', async message => {
             }
 
             const thread = await message.startThread({ name: `${username}'s Room` });
-            const conversation = await client.cai.createChat();
+            const conversation = await client.cai.create();
             await Chat.create({ userId: id, threadId: thread.id, conversationId: conversation.id });
 
             await message.channel.send('[System] Thread created!');
@@ -58,10 +58,10 @@ client.on('messageCreate', async message => {
         return await message.channel.send('[System] Who are you?');
     }
 
-    const conversation = await client.cai.fetchChat(chat.conversationId);
+    await message.channel.sendTyping();
+    const reply = await client.cai.send(chat.conversationId, message.content);
 
-    const [reply] = await conversation.sendAndAwaitResponse(message.content);
-    await message.channel.send(reply.text);
+    await message.channel.send(reply);
 });
 
 client.once('ready', () => {
