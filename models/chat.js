@@ -9,6 +9,10 @@ const schema = mongoose.Schema({
         type: String,
         required: true,
     },
+    conversationId: {
+        type: String,
+        required: true,
+    },
 });
 
 module.exports = mongoose.model('Chat', schema);

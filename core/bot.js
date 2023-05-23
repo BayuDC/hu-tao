@@ -41,9 +41,11 @@ client.on('messageCreate', async message => {
             }
 
             const thread = await message.startThread({ name: `${username}'s Room` });
-            await Chat.create({ userId: id, threadId: thread.id });
-            await thread.send('[System] Thread created!');
-            // TODO create chat in character.ai
+            const conversation = await client.cai.createChat();
+            await Chat.create({ userId: id, threadId: thread.id, conversationId: conversation.id });
+
+            await message.channel.send('[System] Thread created!');
+            await thread.send(conversation.message);
         }
 
         return;
@@ -69,7 +71,7 @@ client.once('ready', () => {
     // TODO eager loading threads collection
 });
 
-module.exports = chat => {
-    client.chat = chat;
+module.exports = cai => {
+    client.cai = cai;
     client.login(token);
 };

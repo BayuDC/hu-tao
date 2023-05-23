@@ -1,21 +1,38 @@
 const CharacterAI = require('node_characterai');
-const characterAI = new CharacterAI();
+const Parser = require('node_characterai/parser');
 
 const token = process.env.CAI_TOKEN;
 const characterId = process.env.CAI_CHARACTER_ID;
-const conversationId = process.env.CAI_CONVERSATION_ID;
 
 module.exports = async () => {
+    const characterAI = new CharacterAI();
     await characterAI.authenticateWithToken(token);
-    const chat = await characterAI.createOrContinueChat(characterId, conversationId);
 
     console.log(`Character AI is ready`);
 
-    return chat;
     return {
-        fetchChat(characterId, conversationId) {},
-        createChat() {},
-    };
+        fetchChat(conversationId) {},
+        async createChat() {
+            try {
+                const request = await characterAI.requester.request('https://beta.character.ai/chat/history/create/', {
+                    body: Parser.stringify({
+                        character_external_id: characterId,
+                        history_external_id: null,
+                    }),
+                    method: 'POST',
+                    headers: characterAI.getHeaders(),
+                });
+                if (!request.ok()) throw null;
+                const response = await Parser.parseJSON(request);
 
-    new Webscoket();
+                const id = response['external_id'];
+                const message = response.messages[0].text;
+
+                return { id, message };
+            } catch (e) {
+                console.log(e);
+                return null;
+            }
+        },
+    };
 };
