@@ -24,7 +24,11 @@ client.on('messageCreate', async message => {
         const command = args.shift().toLowerCase();
 
         if (command == 'ping') {
-            await message.channel.send('Pong!');
+            await message.channel.send('[System] Pong!');
+        } else if (command == 'chat') {
+            const name = message.author.username;
+            const thread = await message.startThread({ name: `${name}'s Room` });
+            await thread.send('[System] Thread created!');
         }
 
         return;
