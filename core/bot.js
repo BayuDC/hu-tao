@@ -28,14 +28,18 @@ client.on('messageCreate', async message => {
         if (command == 'ping') {
             await message.channel.send('[System] Pong!');
         } else if (command == 'chat') {
-            const name = message.author.username;
-            const thread = await message.startThread({ name: `${name}'s Room` });
+            const { id, username } = message.author;
 
-            const chat = await Chat.create({
-                userId: message.author.id,
-                threadId: thread.id,
-            });
+            const chat = await Chat.findOne({ userId: id });
+            if (chat) {
+                const thread = await message.channel.threads.fetch(chat.threadId);
+                await thread.send(`[System] <@${id}>`);
 
+                return;
+            }
+
+            const thread = await message.startThread({ name: `${username}'s Room` });
+            await Chat.create({ userId: id, threadId: thread.id });
             await thread.send('[System] Thread created!');
         }
 
