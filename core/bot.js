@@ -58,11 +58,10 @@ client.on('messageCreate', async message => {
         return await message.channel.send('[System] Who are you?');
     }
 
-    await message.channel.send('Hi!');
-    // TODO interact with character.ai
+    const conversation = await client.cai.fetchChat(chat.conversationId);
 
-    // const [reply] = await client.chat.sendAndAwaitResponse(message.content);
-    // await message.channel.send(reply.text);
+    const [reply] = await conversation.sendAndAwaitResponse(message.content);
+    await message.channel.send(reply.text);
 });
 
 client.once('ready', () => {

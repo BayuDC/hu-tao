@@ -11,7 +11,10 @@ module.exports = async () => {
     console.log(`Character AI is ready`);
 
     return {
-        fetchChat(conversationId) {},
+        async fetchChat(conversationId) {
+            const chat = await characterAI.createOrContinueChat(characterId, conversationId);
+            return chat;
+        },
         async createChat() {
             try {
                 const request = await characterAI.requester.request('https://beta.character.ai/chat/history/create/', {
