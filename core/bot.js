@@ -1,5 +1,7 @@
 const Discord = require('discord.js');
 
+const Chat = require('../models/chat');
+
 const token = process.env.BOT_TOKEN;
 const prefix = process.env.BOT_PREFIX || '!';
 
@@ -28,6 +30,12 @@ client.on('messageCreate', async message => {
         } else if (command == 'chat') {
             const name = message.author.username;
             const thread = await message.startThread({ name: `${name}'s Room` });
+
+            const chat = await Chat.create({
+                userId: message.author.id,
+                threadId: thread.id,
+            });
+
             await thread.send('[System] Thread created!');
         }
 
