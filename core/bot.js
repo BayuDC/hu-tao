@@ -53,8 +53,9 @@ client.on('messageCreate', async message => {
 
     if (message.channel.type != 11) return;
 
-    const chat = await Chat.findOne({ userId: id });
-    if (chat?.userId != id) {
+    const chat = await Chat.findOne({ threadId: message.channel.id });
+    if (!chat) return;
+    if (chat.userId != id) {
         return await message.channel.send('[System] Who are you?');
     }
 
