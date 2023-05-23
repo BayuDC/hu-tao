@@ -30,10 +30,10 @@ client.on('messageCreate', async message => {
         return;
     }
 
-    if (message.guild) return;
+    // if (message.guild) return;
 
-    const [reply] = await client.chat.sendAndAwaitResponse(message.content);
-    await message.channel.send(reply.text);
+    // const [reply] = await client.chat.sendAndAwaitResponse(message.content);
+    // await message.channel.send(reply.text);
 });
 
 client.once('ready', () => {
