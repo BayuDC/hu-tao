@@ -31,14 +31,14 @@ client.on('messageCreate', async message => {
         } else if (command == 'chat') {
             if (message.channel.type == 11) return;
 
-            const chat = await Chat.findOne({ userId: id });
-            if (chat) {
-                // TODO get threads from collection
-                const thread = await message.channel.threads.fetch(chat.threadId);
-                await thread.send(`[System] <@${id}>`);
+            // const chat = await Chat.findOne({ userId: id });
+            // if (chat) {
+            //     // TODO get threads from collection
+            //     const thread = await message.channel.threads.fetch(chat.threadId);
+            //     await thread.send(`[System] <@${id}>`);
 
-                return;
-            }
+            //     return;
+            // }
 
             const thread = await message.startThread({ name: `${username}'s Room` });
             const conversation = await client.cai.create();
