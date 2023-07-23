@@ -9,13 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v3
-      # - uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - uses: martinbeentjes/npm-get-version-action@v1.3.1
       - name: Build and publish a Docker image for ${{ github.repository }}
         uses: macbre/push-to-ghcr@master
         with:
           image_name: ${{ github.repository }}
-          # image_tag: ${{ steps.package-version.outputs.current-version }}
+          image_tag: ${{ steps.package-version.outputs.current-version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
